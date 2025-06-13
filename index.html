@@ -1,34 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-  <title>Inscreva-se no curso</title>
+  <meta charset="UTF-8">
+  <title>Acesso ao Curso</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+    input { margin: 5px; padding: 10px; width: 250px; }
+    button { padding: 10px 20px; }
+  </style>
 </head>
 <body>
-  <h2>Inscrição</h2>
-  <form id="formInscricao">
-    <input type="text" name="nome" placeholder="Nome completo" required><br><br>
-    <input type="email" name="email" placeholder="E-mail" required><br><br>
-    <input type="password" name="senha" placeholder="Senha" required><br><br>
-    <button type="submit">Inscrever</button>
-  </form>
-  <p id="resposta"></p>
+
+  <h2>Insira seus dados para acessar o curso</h2>
+  
+  <input type="text" id="nome" placeholder="Nome completo" required><br>
+  <input type="email" id="email" placeholder="Seu e-mail" required><br>
+  <input type="password" id="senha" placeholder="Senha de acesso" required><br>
+
+  <button onclick="enviarFormulario()">Entrar no curso</button>
+
+  <p id="mensagem" style="color: red;"></p>
 
   <script>
-    document.getElementById("formInscricao").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const formData = new FormData(e.target);
-      fetch("https://script.google.com/macros/s/AKfycbxyuWJvwkeGnPSuPHPAHVwMRImH8wWpVvCvNUGrVfnWP3m-uL5zimG_CEvIKjzfRhnOww/exec", {
+    const SENHA_CORRETA = "minhaSenha123"; // 🔒 Altere aqui para sua senha
+
+    async function enviarFormulario() {
+      const nome = document.getElementById("nome").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const senha = document.getElementById("senha").value;
+
+      if (!nome || !email || !senha) {
+        document.getElementById("mensagem").textContent = "Preencha todos os campos!";
+        return;
+      }
+
+      if (senha !== SENHA_CORRETA) {
+        document.getElementById("mensagem").textContent = "Senha incorreta!";
+        return;
+      }
+
+      const resposta = await fetch("URL_DO_SEU_WEB_APP", {
         method: "POST",
-        body: new URLSearchParams(formData)
-      })
-      .then(res => res.text())
-      .then(msg => {
-        document.getElementById("resposta").innerText = msg;
-        if (msg.includes("sucesso")) {
-          setTimeout(() => window.location.href = "login.html", 2000); // redireciona após sucesso
-        }
+        mode: "no-cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `nome=${encodeURIComponent(nome)}&email=${encodeURIComponent(email)}`
       });
-    });
+
+      // Redireciona para o conteúdo do curso
+      window.location.href = "https://seu-link-do-curso.com";
+    }
   </script>
+
 </body>
 </html>
